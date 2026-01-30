@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "hummingbot": {
+      "command": "docker",
+      "args": ["exec", "-i", "uptrade-hummingbot-mcp-1", "python", "-m", "hummingbot_mcp"],
+      "env": {
+        "HB_API_URL": "http://hummingbot-api:8000",
+        "HB_API_USER": "${HB_API_USER}",
+        "HB_API_PASSWORD": "${HB_API_PASSWORD}"
+      }
+    }
+  }
+}
