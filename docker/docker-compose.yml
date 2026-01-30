@@ -1,0 +1,93 @@
+version: "3.9"
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: uptrade-timescaledb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-uptrade}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-uptrade_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-uptrade}
+    volumes:
+      - tsdb_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./healthcheck.sh:/healthcheck.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-uptrade} -d ${POSTGRES_DB:-uptrade}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - uptrade-net
+    restart: unless-stopped
+
+  hummingbot-api:
+    image: hummingbot/hummingbot-api:latest
+    container_name: uptrade-hb-api
+    ports:
+      - "8000:8000"
+    environment:
+      HB_API_USER: ${HB_API_USER:-admin}
+      HB_API_PASSWORD: ${HB_API_PASSWORD}
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    networks:
+      - uptrade-net
+    restart: unless-stopped
+
+  hummingbot-gateway:
+    image: hummingbot/gateway:latest
+    container_name: uptrade-hb-gateway
+    ports:
+      - "15888:15888"
+    environment:
+      GW_PASSPHRASE: ${GW_PASSPHRASE}
+    volumes:
+      - hb_certs:/usr/src/app/certs
+    depends_on:
+      - hummingbot-api
+    networks:
+      - uptrade-net
+    restart: unless-stopped
+
+  hummingbot-mcp:
+    image: hummingbot/hummingbot-mcp:latest
+    container_name: uptrade-hb-mcp
+    # No exposed port — uses stdio transport
+    depends_on:
+      - hummingbot-api
+    networks:
+      - uptrade-net
+    restart: unless-stopped
+
+  # dashboard:
+  #   # Built in PRP-012 — uncomment when src/dashboard/Dockerfile exists
+  #   build:
+  #     context: ../src/dashboard
+  #     dockerfile: Dockerfile
+  #   container_name: uptrade-dashboard
+  #   ports:
+  #     - "8501:8501"
+  #   depends_on:
+  #     timescaledb:
+  #       condition: service_healthy
+  #     hummingbot-api:
+  #       condition: service_started
+  #     hummingbot-gateway:
+  #       condition: service_started
+  #   networks:
+  #     - uptrade-net
+  #   restart: unless-stopped
+
+networks:
+  uptrade-net:
+    driver: bridge
+
+volumes:
+  tsdb_data:
+  hb_bots:
+  hb_certs:

@@ -1,0 +1,29 @@
+bot_name: cycle_solusdt_hyperliquid_4h
+
+indicator:
+  name: SpectralAnalysis
+  params:
+    method: hurst
+    min_period: 10
+    max_period: 80
+    num_periods: 11
+
+market:
+  exchange: hyperliquid_perpetual
+  pair: SOL-USDT
+  timeframe: 4h
+  candles_max: 500
+
+execution:
+  strategy: directional_trading
+  leverage: 5
+  stop_loss: 0.04
+  take_profit: 0.03
+  time_limit: 14400
+  max_executors: 2
+  cooldown: 900
+  amount_quote: 300
+  position_mode: HEDGE
+
+data:
+  source: exchange

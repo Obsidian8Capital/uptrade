@@ -1,0 +1,33 @@
+bot_name: sniper_btcusdt_binance_1h
+
+indicator:
+  name: SniperProX
+  params:
+    length: 28
+    ma_type: "Jurik Moving Average"
+    overbought_oversold: 1.386
+    trail_threshold: 0.986
+    dmi_len: 14
+    adx_thresh: 20
+    vol_avg_len: 20
+
+market:
+  exchange: binance_perpetual
+  pair: BTC-USDT
+  timeframe: 1h
+  candles_max: 300
+
+execution:
+  strategy: directional_trading
+  leverage: 10
+  stop_loss: 0.03
+  take_profit: 0.02
+  time_limit: 2700
+  max_executors: 2
+  cooldown: 300
+  amount_quote: 500
+  position_mode: HEDGE
+
+data:
+  source: polygon
+  symbol_override: "X:BTCUSD"
