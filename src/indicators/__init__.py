@@ -20,3 +20,5 @@ from src.indicators.spectral import SpectralAnalysis  # noqa: F401
 from src.indicators.signals import generate_signals  # noqa: F401
 from src.indicators.backtest import run_backtest  # noqa: F401
 from src.indicators.optimize import optimize_sniper, optimize_vzo  # noqa: F401
+
+from src.indicators.mtf_cycles import MTFCycleDetector, detect_cycles  # noqa: F401
