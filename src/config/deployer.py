@@ -1,14 +1,11 @@
 """Bot deployment system for Hummingbot V2 via REST API."""
-import asyncio
-import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import httpx
-from pydantic import BaseModel
 
-from src.config.bot_config import BotDeploymentConfig, load_bot_config, load_all_configs
+from src.config.bot_config import BotDeploymentConfig, load_bot_config
 
 logger = logging.getLogger(__name__)
 

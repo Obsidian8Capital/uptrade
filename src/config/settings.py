@@ -1,7 +1,6 @@
 """Central configuration loading from environment variables."""
 from pydantic_settings import BaseSettings
 from pydantic import Field
-from typing import Optional
 
 
 class Settings(BaseSettings):

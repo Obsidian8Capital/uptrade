@@ -17,12 +17,7 @@ from src.indicators.nb.astro_nb import (
     jdn_v2,
     j2k,
     range360,
-    ssun,
-    smoon,
     ecliptic_longitude,
-    midpoint,
-    kepler,
-    rplanet,
 )
 
 # Re-export core Numba functions

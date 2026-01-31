@@ -252,7 +252,6 @@ def planet_elements(d, pnum):
 
     All angles in radians except M which is in radians (wrapped 0..2pi).
     """
-    T = d / 36525.0
     # Default
     i_val = 0.0
     Om = 0.0

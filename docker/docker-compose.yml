@@ -5,7 +5,7 @@ services:
     image: timescale/timescaledb:latest-pg16
     container_name: uptrade-timescaledb
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-uptrade}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-uptrade_dev_password}
@@ -64,24 +64,23 @@ services:
       - uptrade-net
     restart: unless-stopped
 
-  # dashboard:
-  #   # Built in PRP-012 — uncomment when src/dashboard/Dockerfile exists
-  #   build:
-  #     context: ../src/dashboard
-  #     dockerfile: Dockerfile
-  #   container_name: uptrade-dashboard
-  #   ports:
-  #     - "8501:8501"
-  #   depends_on:
-  #     timescaledb:
-  #       condition: service_healthy
-  #     hummingbot-api:
-  #       condition: service_started
-  #     hummingbot-gateway:
-  #       condition: service_started
-  #   networks:
-  #     - uptrade-net
-  #   restart: unless-stopped
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dashboard
+    container_name: uptrade-dashboard
+    ports:
+      - "8501:8501"
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+      hummingbot-api:
+        condition: service_started
+      hummingbot-gateway:
+        condition: service_started
+    networks:
+      - uptrade-net
+    restart: unless-stopped
 
 networks:
   uptrade-net:

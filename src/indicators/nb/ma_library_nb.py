@@ -513,11 +513,6 @@ def covwma_1d_nb(src, window):
             for j in range(window):
                 mean += src[i - j]
             mean /= window
-            var = 0.0
-            for j in range(window):
-                var += (src[i - j] - mean) ** 2
-            stdev = np.sqrt(var / window)
-            cov_ratio = stdev / mean if mean != 0.0 else 0.0
 
             sum_cw = 0.0
             sum_c = 0.0
@@ -760,8 +755,6 @@ def adxvma_1d_nb(src, window):
 def ilrs_1d_nb(src, window):
     n = src.shape[0]
     out = np.empty(n, dtype=np.float64)
-    sum_idx = window * (window - 1) * 0.5
-    sum2 = (window - 1) * window * (2 * window - 1) / 6.0
     sma_vals = sma_1d_nb(src, window)
     for i in range(n):
         length = min(i + 1, window)

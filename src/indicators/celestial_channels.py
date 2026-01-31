@@ -13,7 +13,6 @@ Usage
 import numpy as np
 import pandas as pd
 
-from src.indicators.astro_lib import planet_longitude_series, midpoint
 from src.indicators.nb.astro_nb import jdn_v2, j2k, ecliptic_longitude, midpoint as nb_midpoint
 
 

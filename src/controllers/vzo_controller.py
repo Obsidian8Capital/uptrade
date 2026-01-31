@@ -6,7 +6,6 @@ MA smoothing) as a Hummingbot V2 directional-trading controller.
 
 from __future__ import annotations
 
-import logging
 from typing import Any, Optional
 
 import numpy as np

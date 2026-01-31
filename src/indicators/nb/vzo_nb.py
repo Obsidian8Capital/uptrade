@@ -3,7 +3,7 @@
 import numpy as np
 from numba import njit
 
-from src.indicators.nb.ma_library_nb import universal_ma_1d_nb, MA_JURIK
+from src.indicators.nb.ma_library_nb import universal_ma_1d_nb
 
 
 @njit(cache=True)
