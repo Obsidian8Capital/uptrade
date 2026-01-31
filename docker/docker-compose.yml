@@ -12,7 +12,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-uptrade}
     volumes:
       - tsdb_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./init-hbapi.sh:/docker-entrypoint-initdb.d/02-init-hbapi.sh:ro
       - ./healthcheck.sh:/healthcheck.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-uptrade} -d ${POSTGRES_DB:-uptrade}"]
@@ -32,6 +33,11 @@ services:
     environment:
       HB_API_USER: ${HB_API_USER:-admin}
       HB_API_PASSWORD: ${HB_API_PASSWORD}
+      DATABASE_URL: postgresql+asyncpg://hbot:hummingbot-api@timescaledb:5432/hummingbot_api
+      GATEWAY_URL: http://hummingbot-gateway:15888
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hb_bots:/hummingbot-api/bots
     depends_on:
       timescaledb:
         condition: service_healthy
