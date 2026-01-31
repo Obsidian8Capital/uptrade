@@ -7,7 +7,6 @@ import sys
 from pathlib import Path
 from decimal import Decimal
 
-import numpy as np
 import pandas as pd
 import pytest
 
@@ -19,6 +18,16 @@ from src.controllers.sniper_controller import SniperController, SniperController
 from src.controllers.vzo_controller import VZOController, VZOControllerConfig
 from src.controllers.cycle_controller import CycleController, CycleControllerConfig
 from src.config.deployer import INDICATOR_CONTROLLER_MAP
+
+
+def _has_vectorbtpro() -> bool:
+    """Check if vectorbtpro is available."""
+    try:
+        import importlib
+        importlib.import_module("vectorbtpro")
+        return True
+    except ImportError:
+        return False
 
 
 def _make_controller_config(cls, **overrides):
@@ -36,6 +45,9 @@ def _make_controller_config(cls, **overrides):
 
 class TestSniperController:
 
+    @pytest.mark.skipif(
+        not _has_vectorbtpro(), reason="vectorbtpro not installed"
+    )
     def test_sniper_controller_returns_valid_signal(self, sample_ohlcv_df: pd.DataFrame):
         """SniperController.compute_signal returns -1, 0, or 1."""
         config = _make_controller_config(SniperControllerConfig, length=28)
@@ -54,6 +66,9 @@ class TestSniperController:
 
 class TestVZOController:
 
+    @pytest.mark.skipif(
+        not _has_vectorbtpro(), reason="vectorbtpro not installed"
+    )
     def test_vzo_controller_returns_valid_signal(self, sample_ohlcv_df: pd.DataFrame):
         """VZOController.compute_signal returns -1, 0, or 1."""
         config = _make_controller_config(VZOControllerConfig, vzo_length=14)
@@ -66,6 +81,9 @@ class TestVZOController:
 
 class TestCycleController:
 
+    @pytest.mark.skipif(
+        not _has_vectorbtpro(), reason="vectorbtpro not installed"
+    )
     def test_cycle_controller_returns_valid_signal(self, sample_ohlcv_df: pd.DataFrame):
         """CycleController.compute_signal returns -1, 0, or 1."""
         config = _make_controller_config(CycleControllerConfig, method=0)

@@ -5,8 +5,7 @@ require live services (no DB, no exchange, no API keys).
 """
 import sys
 from pathlib import Path
-from decimal import Decimal
-from unittest.mock import MagicMock, AsyncMock, patch
+from unittest.mock import MagicMock, AsyncMock
 
 import numpy as np
 import pandas as pd

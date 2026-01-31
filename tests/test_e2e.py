@@ -7,7 +7,7 @@ All external services (DB, API) are mocked.
 import sys
 from pathlib import Path
 from decimal import Decimal
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import patch, MagicMock
 
 import numpy as np
 import pandas as pd
@@ -20,10 +20,10 @@ if _project_root not in sys.path:
 from src.indicators.sniper import SniperProX
 from src.indicators.vzo import VZOProX
 from src.indicators.spectral import SpectralAnalysis
-from src.signals.combiner import SignalCombiner, SignalCombinerConfig, CombineMode, IndicatorSignalConfig
+from src.signals.combiner import SignalCombiner
 from src.controllers.sniper_controller import SniperController, SniperControllerConfig
 from src.controllers.cycle_controller import CycleController, CycleControllerConfig
-from src.config.deployer import BotDeployer, INDICATOR_CONTROLLER_MAP
+from src.config.deployer import BotDeployer
 
 
 def _ctrl_config(cls, **kw):

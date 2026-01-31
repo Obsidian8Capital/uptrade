@@ -1,10 +1,8 @@
 """Data pipeline tests -- all DB/API calls are mocked."""
 import sys
 from pathlib import Path
-from unittest.mock import patch, MagicMock, PropertyMock
-from datetime import datetime, timezone
+from unittest.mock import patch, MagicMock
 
-import numpy as np
 import pandas as pd
 import pytest
 import yaml
@@ -80,28 +78,30 @@ class TestTSDBReader:
 
 class TestDataUpdater:
 
-    @patch("src.data.updater.PolygonClient")
-    @patch("src.data.updater.write_ohlcv")
-    @patch("src.data.updater.get_latest_timestamp", return_value=None)
-    def test_data_updater_calls_polygon(
-        self, mock_latest, mock_write, mock_polygon_cls
-    ):
+    def test_data_updater_calls_polygon(self):
         """DataUpdaterService.startup_backfill calls PolygonClient.incremental_update."""
-        from src.data.updater import DataUpdaterService
+        # Mock vectorbtpro before importing updater (it pulls in polygon_client)
+        vbt_mock = MagicMock()
+        with patch.dict(sys.modules, {"vectorbtpro": vbt_mock, "vectorbtpro.data": vbt_mock}):
+            with (
+                patch("src.data.updater.PolygonClient") as mock_polygon_cls,
+                patch("src.data.updater.write_ohlcv"),
+                patch("src.data.updater.get_latest_timestamp", return_value=None),
+            ):
+                from src.data.updater import DataUpdaterService
 
-        mock_client = MagicMock()
-        mock_client.incremental_update.return_value = pd.DataFrame({"close": [1, 2]})
-        mock_polygon_cls.return_value = mock_client
+                mock_client = MagicMock()
+                mock_client.incremental_update.return_value = pd.DataFrame({"close": [1, 2]})
+                mock_polygon_cls.return_value = mock_client
 
-        service = DataUpdaterService(
-            symbols=["X:BTCUSD"],
-            timeframes=["1h"],
-        )
-        # Override the client with our mock
-        service.client = mock_client
+                service = DataUpdaterService(
+                    symbols=["X:BTCUSD"],
+                    timeframes=["1h"],
+                )
+                service.client = mock_client
 
-        service.startup_backfill()
-        mock_client.incremental_update.assert_called_once()
+                service.startup_backfill()
+                mock_client.incremental_update.assert_called_once()
 
 
 # ── Bot config YAML loading ────────────────────────────────────────────

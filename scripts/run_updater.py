@@ -50,10 +50,10 @@ def main():
     else:
         updater = DataUpdaterService.from_bot_configs(args.config_dir)
 
-    print(f"UpTrade Data Updater")
+    print("UpTrade Data Updater")
     print(f"  Symbols:    {updater.symbols}")
     print(f"  Timeframes: {updater.timeframes}")
-    print(f"  Starting...")
+    print("  Starting...")
 
     asyncio.run(updater.run())
 
